@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EDB-timen 1983</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="crt" id="screen" aria-label="Skjerm. Skriv navnet ditt, og bruk piltastene for å flytte det.">
+  <input id="name-input" maxlength="30" aria-label="Skriv navnet ditt" spellcheck="false" autocomplete="off" autocapitalize="characters">
+
+  <div class="line prompt" id="prompt" style="--y:0">NAVN? <span id="typed"></span><span class="cursor"></span><span id="placeholder" class="dim">SKRIV NAVNET DITT HER</span></div>
+  <div class="line dim" style="--y:1">────────────────────────────────────────</div>
+
+  <div id="name" aria-live="polite"></div>
+
+  <div class="line dim" style="--y:23">────────────────────────────────────────</div>
+  <div class="line" style="--y:24" id="status"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

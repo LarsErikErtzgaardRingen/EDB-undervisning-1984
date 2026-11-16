@@ -1,0 +1,89 @@
+/* Layout: én gammel monitor som fyller vinduet. Bevisst bare ett (mørkt) tema. */
+:root {
+  --room: #050605;        /* rundt skjermen */
+  --glass: #071009;       /* selve skjermflaten */
+  --phosphor: #4dff7a;    /* tekstfargen – bytt til #ffb000 for ravgult */
+  --dim: #1f6b33;
+  --font: "VT323", "Courier New", monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--room);
+  color: var(--phosphor);
+  font-family: var(--font);
+  display: grid; place-items: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px;
+}
+
+/* Skjermen: 40 kolonner × 25 rader, i 4:3-format som et gammelt rør */
+.crt {
+  container-type: inline-size;
+  position: relative;
+  width: min(100%, 960px, (100vh - 32px) * 4 / 3);
+  aspect-ratio: 4 / 3;
+  background: radial-gradient(ellipse at center, #0c1a10 0%, var(--glass) 70%);
+  border-radius: 4% / 5%;
+  overflow: hidden;
+  cursor: crosshair;
+  box-shadow: 0 0 0 2px #111, 0 0 60px rgba(77, 255, 122, .08), inset 0 0 80px rgba(0, 0, 0, .9);
+}
+.crt {
+  --cw: calc(100cqw / 40);        /* bredden på én tegnrute */
+  --ch: calc(var(--cw) * 1.2);    /* høyden på én tegnrute */
+}
+
+/* Skannlinjer og mørke hjørner ligger oppå alt */
+.crt::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0,0,0,.28) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.65) 100%);
+}
+
+/* Alt som står på skjermen plasseres i rutenettet */
+.line, #name {
+  position: absolute;
+  left: calc(var(--cw) * var(--x, 0));
+  top: calc(var(--ch) * var(--y, 0));
+  height: var(--ch);
+  font-size: calc(var(--ch) * 0.95);
+  line-height: var(--ch);
+  white-space: pre;
+  text-shadow: 0 0 calc(var(--cw) * .35) currentColor;
+  animation: flicker 4s infinite;
+}
+.dim { color: var(--dim); }
+@keyframes flicker { 50% { opacity: .96; } 52% { opacity: .9; } 54% { opacity: .97; } }
+
+/* Navnet: én rute per bokstav, så det følger rutenettet nøyaktig */
+#name span { display: inline-block; width: var(--cw); text-align: center; }
+
+/* Skrivelinja øverst */
+.prompt { cursor: text; }
+
+/* Den blinkende grønne firkanten */
+.cursor {
+  display: inline-block;
+  width: 1ch;
+  height: 0.8em;
+  vertical-align: -0.08em;
+  background: var(--phosphor);
+  box-shadow: 0 0 calc(var(--cw) * .35) var(--phosphor);
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Det ekte tekstfeltet er usynlig – vi tegner teksten selv på "skjermen" */
+#name-input {
+  position: absolute; left: 0; top: 0;
+  width: 1px; height: 1px; opacity: 0;
+  border: 0; padding: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line, #name { animation: none; }
+}
